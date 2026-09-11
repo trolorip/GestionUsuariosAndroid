@@ -29,18 +29,37 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestion.data.UsuarioRepository
+import com.example.gestion.util.rememberAccessibilityFeedback
 
 @Composable
-fun Login(
+fun LoginScreen(
     onIrRegistro: () -> Unit = {},
-    onIrRecuperar: () -> Unit = {}
+    onIrRecuperar: () -> Unit = {},
+    onLoginExitoso: () -> Unit = {}
 ) {
 
-    var correo by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var mostrarPassword by remember { mutableStateOf(false) }
-    var mensaje by remember { mutableStateOf("") }
-    var esError by remember { mutableStateOf(false) }
+    var correo by remember {
+        mutableStateOf("")
+    }
+
+    var password by remember {
+        mutableStateOf("")
+    }
+
+    var mostrarPassword by remember {
+        mutableStateOf(false)
+    }
+
+    var mensaje by remember {
+        mutableStateOf("")
+    }
+
+    var esError by remember {
+        mutableStateOf(false)
+    }
+
+    val feedback =
+        rememberAccessibilityFeedback()
 
     Scaffold { paddingValues ->
 
@@ -110,11 +129,14 @@ fun Login(
                         PasswordVisualTransformation()
                     },
                 trailingIcon = {
+
                     IconButton(
                         onClick = {
-                            mostrarPassword = !mostrarPassword
+                            mostrarPassword =
+                                !mostrarPassword
                         }
                     ) {
+
                         Text(
                             text =
                                 if (mostrarPassword) {
@@ -126,7 +148,8 @@ fun Login(
                     }
                 },
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password
+                    keyboardType =
+                        KeyboardType.Password
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -138,28 +161,50 @@ fun Login(
             Button(
                 onClick = {
 
-                    if (correo.isBlank() || password.isBlank()) {
+                    if (
+                        correo.isBlank() ||
+                        password.isBlank()
+                    ) {
 
-                        mensaje = "Debes completar todos los campos."
+                        mensaje =
+                            "Debes completar todos los campos."
+
                         esError = true
+
+                        feedback.error(
+                            "Debes completar todos los campos"
+                        )
 
                     } else {
 
                         val loginCorrecto =
-                            UsuarioRepository.validarLogin(
-                                correo.trim(),
-                                password
-                            )
+                            UsuarioRepository
+                                .validarLogin(
+                                    correo.trim(),
+                                    password
+                                )
 
                         if (loginCorrecto) {
 
                             mensaje = "Inicio de sesión correcto."
                             esError = false
 
+                            feedback.exito(
+                                "Inicio de sesión correcto"
+                            )
+
+                            onLoginExitoso()
+
                         } else {
 
-                            mensaje = "Correo o contraseña incorrectos."
+                            mensaje =
+                                "Correo o contraseña incorrectos."
+
                             esError = true
+
+                            feedback.error(
+                                "Correo o contraseña incorrectos"
+                            )
                         }
                     }
                 },
@@ -179,6 +224,8 @@ fun Login(
 
                 Text(
                     text = mensaje,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 17.sp,
                     color =
                         if (esError) {
                             MaterialTheme.colorScheme.error
@@ -195,16 +242,20 @@ fun Login(
             TextButton(
                 onClick = onIrRecuperar
             ) {
+
                 Text(
-                    text = "¿Olvidaste tu contraseña?"
+                    text =
+                        "¿Olvidaste tu contraseña?"
                 )
             }
 
             TextButton(
                 onClick = onIrRegistro
             ) {
+
                 Text(
-                    text = "¿No tienes cuenta? Regístrate"
+                    text =
+                        "¿No tienes cuenta? Regístrate"
                 )
             }
         }

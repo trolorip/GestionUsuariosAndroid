@@ -28,6 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestion.data.UsuarioRepository
+import com.example.gestion.util.rememberAccessibilityFeedback
 
 @Composable
 fun RecoverScreen(
@@ -46,6 +47,9 @@ fun RecoverScreen(
         mutableStateOf(false)
     }
 
+    val feedback =
+        rememberAccessibilityFeedback()
+
     Scaffold { paddingValues ->
 
         Column(
@@ -53,8 +57,10 @@ fun RecoverScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement =
+                Arrangement.Center,
+            horizontalAlignment =
+                Alignment.CenterHorizontally
         ) {
 
             Text(
@@ -68,7 +74,8 @@ fun RecoverScreen(
             )
 
             Text(
-                text = "Ingresa el correo asociado a tu cuenta"
+                text =
+                    "Ingresa el correo asociado a tu cuenta"
             )
 
             Spacer(
@@ -78,6 +85,7 @@ fun RecoverScreen(
             OutlinedTextField(
                 value = correo,
                 onValueChange = {
+
                     correo = it
                     mensajeError = ""
                 },
@@ -86,7 +94,8 @@ fun RecoverScreen(
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email
+                    keyboardType =
+                        KeyboardType.Email
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -98,7 +107,8 @@ fun RecoverScreen(
             Button(
                 onClick = {
 
-                    val correoLimpio = correo.trim()
+                    val correoLimpio =
+                        correo.trim()
 
                     if (
                         !Patterns.EMAIL_ADDRESS
@@ -109,22 +119,36 @@ fun RecoverScreen(
                         mensajeError =
                             "Ingresa un correo electrónico válido."
 
+                        feedback.error(
+                            "Ingresa un correo electrónico válido"
+                        )
+
                     } else {
 
                         val usuario =
-                            UsuarioRepository.buscarUsuario(
-                                correoLimpio
-                            )
+                            UsuarioRepository
+                                .buscarUsuario(
+                                    correoLimpio
+                                )
 
                         if (usuario != null) {
 
                             mensajeError = ""
+
                             mostrarPopup = true
+
+                            feedback.exito(
+                                "Correo encontrado. Se ha enviado un mensaje para restablecer tu contraseña"
+                            )
 
                         } else {
 
                             mensajeError =
                                 "No existe una cuenta asociada a ese correo."
+
+                            feedback.error(
+                                "No existe una cuenta asociada a ese correo"
+                            )
                         }
                     }
                 },
@@ -132,7 +156,8 @@ fun RecoverScreen(
             ) {
 
                 Text(
-                    text = "RECUPERAR CONTRASEÑA"
+                    text =
+                        "RECUPERAR CONTRASEÑA"
                 )
             }
 
@@ -144,7 +169,10 @@ fun RecoverScreen(
 
                 Text(
                     text = mensajeError,
-                    color = MaterialTheme.colorScheme.error
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold,
+                    color =
+                        MaterialTheme.colorScheme.error
                 )
             }
 
@@ -157,7 +185,8 @@ fun RecoverScreen(
             ) {
 
                 Text(
-                    text = "← Volver al inicio de sesión"
+                    text =
+                        "← Volver al inicio de sesión"
                 )
             }
         }
@@ -171,12 +200,14 @@ fun RecoverScreen(
             },
 
             title = {
+
                 Text(
                     text = "Correo enviado"
                 )
             },
 
             text = {
+
                 Text(
                     text =
                         "Se ha enviado un mensaje a $correo para restablecer tu contraseña."
@@ -187,7 +218,9 @@ fun RecoverScreen(
 
                 Button(
                     onClick = {
+
                         mostrarPopup = false
+
                         onVolverLogin()
                     }
                 ) {

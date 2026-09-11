@@ -2,6 +2,7 @@ package com.example.gestion.ui.screens
 
 import android.util.Patterns
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestion.data.UsuarioRepository
 import com.example.gestion.model.Usuario
+import com.example.gestion.util.rememberAccessibilityFeedback
 
 @Composable
 fun RegisterScreen(
@@ -65,13 +67,18 @@ fun RegisterScreen(
         mutableStateOf(false)
     }
 
+    val feedback =
+        rememberAccessibilityFeedback()
+
     Scaffold { paddingValues ->
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(
+                    rememberScrollState()
+                )
                 .padding(24.dp)
         ) {
 
@@ -86,7 +93,8 @@ fun RegisterScreen(
             )
 
             Text(
-                text = "Completa tus datos para registrarte"
+                text =
+                    "Completa tus datos para registrarte"
             )
 
             Spacer(
@@ -121,7 +129,8 @@ fun RegisterScreen(
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email
+                    keyboardType =
+                        KeyboardType.Email
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -140,9 +149,11 @@ fun RegisterScreen(
                     Text("Contraseña")
                 },
                 singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
+                visualTransformation =
+                    PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password
+                    keyboardType =
+                        KeyboardType.Password
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -161,9 +172,11 @@ fun RegisterScreen(
                     Text("Repetir contraseña")
                 },
                 singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
+                visualTransformation =
+                    PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password
+                    keyboardType =
+                        KeyboardType.Password
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -172,8 +185,9 @@ fun RegisterScreen(
                 modifier = Modifier.height(12.dp)
             )
 
-            androidx.compose.foundation.layout.Row(
-                verticalAlignment = Alignment.CenterVertically
+            Row(
+                verticalAlignment =
+                    Alignment.CenterVertically
             ) {
 
                 Checkbox(
@@ -184,7 +198,8 @@ fun RegisterScreen(
                 )
 
                 Text(
-                    text = "Acepto los términos y condiciones"
+                    text =
+                        "Acepto los términos y condiciones"
                 )
             }
 
@@ -195,7 +210,8 @@ fun RegisterScreen(
             Button(
                 onClick = {
 
-                    val correoLimpio = correo.trim()
+                    val correoLimpio =
+                        correo.trim()
 
                     when {
 
@@ -204,16 +220,28 @@ fun RegisterScreen(
                                 password.isBlank() ||
                                 repetirPassword.isBlank() -> {
 
-                            mensaje = "Debes completar todos los campos."
+                            mensaje =
+                                "Debes completar todos los campos."
+
                             esError = true
+
+                            feedback.error(
+                                "Debes completar todos los campos"
+                            )
                         }
 
                         !Patterns.EMAIL_ADDRESS
                             .matcher(correoLimpio)
                             .matches() -> {
 
-                            mensaje = "Ingresa un correo válido."
+                            mensaje =
+                                "Ingresa un correo válido."
+
                             esError = true
+
+                            feedback.error(
+                                "Ingresa un correo electrónico válido"
+                            )
                         }
 
                         password.length < 4 -> {
@@ -222,12 +250,23 @@ fun RegisterScreen(
                                 "La contraseña debe tener al menos 4 caracteres."
 
                             esError = true
+
+                            feedback.error(
+                                "La contraseña debe tener al menos cuatro caracteres"
+                            )
                         }
 
-                        password != repetirPassword -> {
+                        password !=
+                                repetirPassword -> {
 
-                            mensaje = "Las contraseñas no coinciden."
+                            mensaje =
+                                "Las contraseñas no coinciden."
+
                             esError = true
+
+                            feedback.error(
+                                "Las contraseñas no coinciden"
+                            )
                         }
 
                         !aceptaTerminos -> {
@@ -236,18 +275,26 @@ fun RegisterScreen(
                                 "Debes aceptar los términos y condiciones."
 
                             esError = true
+
+                            feedback.error(
+                                "Debes aceptar los términos y condiciones"
+                            )
                         }
 
                         else -> {
 
                             val registrado =
-                                UsuarioRepository.registrarUsuario(
-                                    Usuario(
-                                        nombre = nombre.trim(),
-                                        correo = correoLimpio,
-                                        password = password
+                                UsuarioRepository
+                                    .registrarUsuario(
+                                        Usuario(
+                                            nombre =
+                                                nombre.trim(),
+                                            correo =
+                                                correoLimpio,
+                                            password =
+                                                password
+                                        )
                                     )
-                                )
 
                             if (registrado) {
 
@@ -255,6 +302,10 @@ fun RegisterScreen(
                                     "Usuario registrado correctamente."
 
                                 esError = false
+
+                                feedback.exito(
+                                    "Usuario registrado correctamente"
+                                )
 
                                 nombre = ""
                                 correo = ""
@@ -268,6 +319,10 @@ fun RegisterScreen(
                                     "Ya existe un usuario con ese correo."
 
                                 esError = true
+
+                                feedback.error(
+                                    "Ya existe un usuario con ese correo"
+                                )
                             }
                         }
                     }
@@ -275,7 +330,9 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-                Text("REGISTRAR")
+                Text(
+                    text = "REGISTRAR"
+                )
             }
 
             if (mensaje.isNotEmpty()) {
@@ -286,6 +343,8 @@ fun RegisterScreen(
 
                 Text(
                     text = mensaje,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 17.sp,
                     color =
                         if (esError) {
                             MaterialTheme.colorScheme.error
@@ -307,7 +366,8 @@ fun RegisterScreen(
             ) {
 
                 Text(
-                    text = "← Volver al inicio de sesión"
+                    text =
+                        "← Volver al inicio de sesión"
                 )
             }
         }

@@ -4,9 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.gestion.ui.screens.Login
+import com.example.gestion.ui.screens.LoginScreen
 import com.example.gestion.ui.screens.RecoverScreen
 import com.example.gestion.ui.screens.RegisterScreen
+import com.example.gestion.ui.screens.UsuariosScreen
 
 @Composable
 fun AppNavigation() {
@@ -21,12 +22,24 @@ fun AppNavigation() {
 
         composable("login") {
 
-            Login(
+            LoginScreen(
+
                 onIrRegistro = {
                     navController.navigate("registro")
                 },
+
                 onIrRecuperar = {
                     navController.navigate("recuperar")
+                },
+
+                onLoginExitoso = {
+
+                    navController.navigate("usuarios") {
+
+                        popUpTo("login") {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -45,6 +58,21 @@ fun AppNavigation() {
             RecoverScreen(
                 onVolverLogin = {
                     navController.popBackStack()
+                }
+            )
+        }
+
+        composable("usuarios") {
+
+            UsuariosScreen(
+                onCerrarSesion = {
+
+                    navController.navigate("login") {
+
+                        popUpTo("usuarios") {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
