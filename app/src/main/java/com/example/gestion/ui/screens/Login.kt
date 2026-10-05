@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gestion.data.UsuarioRepository
+import com.example.gestion.data.FirebaseService
 import com.example.gestion.util.rememberAccessibilityFeedback
 
 @Composable
@@ -177,34 +177,28 @@ fun LoginScreen(
 
                     } else {
 
-                        val loginCorrecto =
-                            UsuarioRepository
-                                .validarLogin(
-                                    correo.trim(),
-                                    password
+                        FirebaseService.iniciarSesion(
+                            correo = correo.trim(),
+                            password = password
+                        ) { correcto, respuesta ->
+
+                            mensaje = respuesta
+                            esError = !correcto
+
+                            if (correcto) {
+
+                                feedback.exito(
+                                    "Inicio de sesión correcto"
                                 )
 
-                        if (loginCorrecto) {
+                                onLoginExitoso()
 
-                            mensaje = "Inicio de sesión correcto."
-                            esError = false
+                            } else {
 
-                            feedback.exito(
-                                "Inicio de sesión correcto"
-                            )
-
-                            onLoginExitoso()
-
-                        } else {
-
-                            mensaje =
-                                "Correo o contraseña incorrectos."
-
-                            esError = true
-
-                            feedback.error(
-                                "Correo o contraseña incorrectos"
-                            )
+                                feedback.error(
+                                    "Correo o contraseña incorrectos"
+                                )
+                            }
                         }
                     }
                 },

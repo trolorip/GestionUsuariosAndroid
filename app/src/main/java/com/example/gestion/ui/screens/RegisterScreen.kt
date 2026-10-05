@@ -30,9 +30,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gestion.data.UsuarioRepository
-import com.example.gestion.model.Usuario
 import com.example.gestion.util.rememberAccessibilityFeedback
+import com.example.gestion.data.FirebaseService
 
 @Composable
 fun RegisterScreen(
@@ -283,46 +282,31 @@ fun RegisterScreen(
 
                         else -> {
 
-                            val registrado =
-                                UsuarioRepository
-                                    .registrarUsuario(
-                                        Usuario(
-                                            nombre =
-                                                nombre.trim(),
-                                            correo =
-                                                correoLimpio,
-                                            password =
-                                                password
-                                        )
+                            FirebaseService.registrarUsuario(
+                                nombre = nombre.trim(),
+                                correo = correoLimpio,
+                                password = password
+                            ) { correcto, respuesta ->
+
+                                mensaje = respuesta
+                                esError = !correcto
+
+                                if (correcto) {
+
+                                    feedback.exito(
+                                        "Usuario registrado correctamente"
                                     )
 
-                            if (registrado) {
+                                    nombre = ""
+                                    correo = ""
+                                    password = ""
+                                    repetirPassword = ""
+                                    aceptaTerminos = false
 
-                                mensaje =
-                                    "Usuario registrado correctamente."
+                                } else {
 
-                                esError = false
-
-                                feedback.exito(
-                                    "Usuario registrado correctamente"
-                                )
-
-                                nombre = ""
-                                correo = ""
-                                password = ""
-                                repetirPassword = ""
-                                aceptaTerminos = false
-
-                            } else {
-
-                                mensaje =
-                                    "Ya existe un usuario con ese correo."
-
-                                esError = true
-
-                                feedback.error(
-                                    "Ya existe un usuario con ese correo"
-                                )
+                                    feedback.error(respuesta)
+                                }
                             }
                         }
                     }

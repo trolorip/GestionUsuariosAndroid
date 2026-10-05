@@ -9,8 +9,14 @@ import com.example.gestion.ui.screens.RecoverScreen
 import com.example.gestion.ui.screens.RegisterScreen
 import com.example.gestion.ui.screens.UsuariosScreen
 
+import android.app.Activity
+import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
+import com.example.gestion.HomeActivity
+
 @Composable
 fun AppNavigation() {
+    val context = LocalContext.current
 
     val navController =
         rememberNavController()
@@ -34,12 +40,15 @@ fun AppNavigation() {
 
                 onLoginExitoso = {
 
-                    navController.navigate("usuarios") {
+                    val intent =
+                        Intent(
+                            context,
+                            HomeActivity::class.java
+                        )
 
-                        popUpTo("login") {
-                            inclusive = true
-                        }
-                    }
+                    context.startActivity(intent)
+
+                    (context as? Activity)?.finish()
                 }
             )
         }

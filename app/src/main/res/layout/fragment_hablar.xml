@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hablar"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Presiona el botón y habla para convertir tu voz en texto"
+        android:textSize="17sp"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/btnEscuchar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="HABLAR" />
+
+    <TextView
+        android:id="@+id/tvTextoReconocido"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="El texto reconocido aparecerá aquí"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="20dp"
+        android:layout_marginTop="32dp" />
+
+    <Button
+        android:id="@+id/btnLimpiarHablar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LIMPIAR"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/btnVolverHablar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VOLVER"
+        android:layout_marginTop="20dp" />
+
+</LinearLayout>

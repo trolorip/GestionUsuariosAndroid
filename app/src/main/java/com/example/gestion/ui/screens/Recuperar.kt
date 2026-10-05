@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gestion.data.UsuarioRepository
+import com.example.gestion.data.FirebaseService
 import com.example.gestion.util.rememberAccessibilityFeedback
 
 @Composable
@@ -125,30 +125,27 @@ fun RecoverScreen(
 
                     } else {
 
-                        val usuario =
-                            UsuarioRepository
-                                .buscarUsuario(
-                                    correoLimpio
+                        FirebaseService.recuperarPassword(
+                            correoLimpio
+                        ) { correcto, respuesta ->
+
+                            if (correcto) {
+
+                                mensajeError = ""
+                                mostrarPopup = true
+
+                                feedback.exito(
+                                    "Correo enviado para restablecer la contraseña"
                                 )
 
-                        if (usuario != null) {
+                            } else {
 
-                            mensajeError = ""
+                                mensajeError = respuesta
 
-                            mostrarPopup = true
-
-                            feedback.exito(
-                                "Correo encontrado. Se ha enviado un mensaje para restablecer tu contraseña"
-                            )
-
-                        } else {
-
-                            mensajeError =
-                                "No existe una cuenta asociada a ese correo."
-
-                            feedback.error(
-                                "No existe una cuenta asociada a ese correo"
-                            )
+                                feedback.error(
+                                    "No fue posible enviar el correo"
+                                )
+                            }
                         }
                     }
                 },
