@@ -188,4 +188,31 @@ object FirebaseService {
                 resultado(false)
             }
     }
+
+    fun obtenerNombreUsuarioActual(resultado: (String) -> Unit) {
+
+        val usuario = auth.currentUser
+
+        if (usuario == null) {
+            resultado("Usuario")
+            return
+        }
+
+        db.collection("usuarios")
+            .document(usuario.uid)
+            .get()
+            .addOnSuccessListener { documento ->
+
+                val nombre = documento.getString("nombre")
+
+                if (!nombre.isNullOrBlank()) {
+                    resultado(nombre)
+                } else {
+                    resultado("Usuario")
+                }
+            }
+            .addOnFailureListener {
+                resultado("Usuario")
+            }
+    }
 }
